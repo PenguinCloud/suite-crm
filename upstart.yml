@@ -1,0 +1,55 @@
+---
+- hosts: localhost
+  connection: local
+  vars_file:
+    - vars/base.yml
+   become: yes
+  become_user: root
+  remote_user: root
+  tasks:
+    - name: Include nodeType variables
+      include_vars:
+        file: "vars/{{ BUILD_ENVIRONMENT }}.yml"
+      tags:
+        - always
+    ignore_errors: yes
+    - name: Include Special Variables
+      include_vars:
+        file: "vars/{{ lookup('env', 'COMPUTE_ENV') | default( 'base', True) }}.yml"
+      ignore_errors: yes
+    - name: Build And Install
+      include_tasks:
+        file: jobs/build/build.yml
+        apply:
+          tags:
+            - build
+      tags:
+        - build
+    - name: Run Configuration and Live
+      include_tasks:
+        file: jobs/run/run.yml
+        apply:
+          tags:
+            - run
+      tags:
+        - run
+    - name: Run tests to make sure build and run applied application correctly
+      include_tasks:
+        file: jobs/run/tests.yml
+      tags:
+        - run
+        - test
+    - name: Execute application
+      include_tasks:
+        file: jobs/run/exec.yml
+        apply:
+          tags:
+            - exec
+      tags:
+        - exec
+    - name: Run tests to make sure app is running as expected
+      include_tasks:
+        file: jobs/run/tests.yml
+      tags:
+        - exec
+        - test
