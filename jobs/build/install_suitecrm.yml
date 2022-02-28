@@ -1,0 +1,6 @@
+---
+- name: Download and extract SuiteCRM
+  ansible.builtin.unarchive:
+    src: https://suitecrm.com/files/162/SuiteCRM-7.11/525/SuiteCRM-7.11.18.zip
+    dest: /opt/
+    remote_src: yes

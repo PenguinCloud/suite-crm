@@ -1,5 +1,44 @@
 ---
 version: "2.4"
 services:
-  app:
-    image: penguintech/core-ansible
+  mariadb:
+    image: 'bitnami/mariadb:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_PASSWORD=p@ssword
+      - MARIADB_DATABASE=suitecrm
+      - MARIADB_USER=suitecrm
+    ports:
+      - "3306:3306"
+    networks:
+      - suitecrm
+
+  php-fpm:
+    image: 'bitnami/php-fpm:latest'
+    ports:
+      - "9000:9000"
+    networks:
+      - suitecrm
+
+  suitecrm-server:
+    build: .
+    environment:
+      - DATABASE_HOST=mariadb
+      - URL=https://127.0.0.1
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - mariadb
+    networks:
+      - suitecrm
+    restart: on-failure # Added this to give maria_db to configure for testing purposes
+    healthcheck:
+      test: ["CMD", "ansible-playbook", "upstart.yml", "--tag", "test"]
+      interval: 5m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  suitecrm:
