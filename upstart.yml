@@ -1,5 +1,5 @@
 ---
-- name: Install Restyaboard server
+- name: Install SuiteCRM server
   hosts: localhost
   connection: local
   vars_files:
@@ -28,6 +28,17 @@
       tags:
         - suitecrm
         - build
+
+    - name: Template php.ini file
+      include_tasks:
+        file: jobs/run/config_php.yml
+        apply:
+          tags:
+          - php_config
+          - run
+      tags:
+      - php_config
+      - run
 
     - name: Generate SSL certificate
       include_tasks:
@@ -62,17 +73,6 @@
         - nginx
         - run
 
-#    - name: Configure restyaboard
-#      include_tasks:
-#        file: jobs/run/restyaboard_config.yml
-#        apply:
-#          tags:
-#          - config-restyaboard
-#          - run
-#      tags:
-#      - config_restyaboard
-#      - run
-
     - name: Test database connectivity
       include_tasks:
         file: jobs/tests/database_test.yml
@@ -84,6 +84,17 @@
       tags:
       - database
       - test
+      - run
+
+    - name: Configure suiteCRM
+      include_tasks:
+        file: jobs/run/suitecrm_config.yml
+        apply:
+          tags:
+          - config_suiteCRM
+          - run
+      tags:
+      - config_suiteCRM
       - run
 
     - name: Test Nginx

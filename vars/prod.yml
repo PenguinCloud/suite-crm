@@ -12,6 +12,10 @@ organization:
   email: "{{ lookup('env', 'ORGANIZATION_EMAIL') }}"
   hostname: "{{ lookup('env', 'ORGANISATION_HOSTNAME') }}"
 
+admin:
+  name: "{{ lookup('env', 'ADMIN_NAME') }}"
+  password: "{{ lookup('env', 'ADMIN_PASS') }}"
+
 ssl_key: "{{ lookup('env', 'SSL_KEY') }}"
 ssl_cert: "{{ lookup('env', 'SSL_CERTIFICATE') }}"
 

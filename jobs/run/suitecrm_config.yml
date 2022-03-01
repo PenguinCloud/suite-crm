@@ -1,0 +1,17 @@
+---
+- name: Run command to install Suite CRM
+  command: >
+    ./bin/console suitecrm:app:install
+    -u "{{ admin.name }}"
+    -p "{{ admin.password }}"
+    -U "{{ database.user }}"
+    -P "{{ database.password }}"
+    -H "{{ database.host }}"
+    -N "{{ database.name }}"
+    -S "{{ url }}"
+    -Z "{{ database.port }}"
+    -d "yes"
+  args:
+    chdir: /opt/suitecrm
+  register: cmd_result
+  failed_when: (cmd_result.rc != 0 ) and (cmd_result.rc != 255 )

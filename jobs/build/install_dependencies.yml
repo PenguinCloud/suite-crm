@@ -3,19 +3,21 @@
   apt:
     pkg:
     - nginx-core
-    - php
-    - imagemagick
-    - php-common
-    - php-gd
-    - php-imap
-    - php-json
+    - php-cli
     - php-curl
-    - php-zip
-    - php-xml
-    - php-mbstring
-    - php-bz2
+    - php-common
     - php-intl
-    - php-gmp
+    - php-json
+    - php-gd
+    - php-mbstring
+    - php-mysqli
+    - php-pdo-mysql
+    - openssl
+    - php-soap
+    - php-xml
+    - php-zip
+    - php-imap
+    - php-ldap
     - python-openssl
     - python3-pymysql
     state: latest
