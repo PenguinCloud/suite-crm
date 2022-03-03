@@ -1,0 +1,5 @@
+---
+- name: Execute nginx
+  shell: |
+     pkill -9 nginx
+     nginx -g 'daemon off;'
