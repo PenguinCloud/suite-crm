@@ -4,7 +4,7 @@ services:
   mariadb:
     image: 'bitnami/mariadb:latest'
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=password123
       - MARIADB_PASSWORD=p@ssword
       - MARIADB_DATABASE=suitecrm
       - MARIADB_USER=suitecrm

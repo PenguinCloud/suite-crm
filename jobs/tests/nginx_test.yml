@@ -1,9 +1,0 @@
----
-- name: Test for running nginx
-  shell: ps axuf|grep 'nginx'|grep -v "grep" | tr -d "\n" | cat
-
-- name: Test service on port 80
-  shell: netstat -tunlp | grep ":80 " | sed -e 's/.*\///'
-
-- name: Test service on port 443
-  shell: netstat -tunlp | grep ":443 " | sed -e 's/.*\///'
