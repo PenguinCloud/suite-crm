@@ -70,7 +70,7 @@
             - exec
       tags:
         - exec
-#    This section is not needed because we enable nginx damon
+#    This section is not needed because we enable nginx daemon
 #    - name: Run tests to make sure app is running as expected
 #      include_tasks:
 #        file: jobs/run/test.yml
