@@ -1,4 +1,10 @@
 ---
+- name: Config php
+  template:
+    src: templates/php_config.j2
+    dest: /etc/php/7.4/cli/php.ini
+    force: yes
+
 - name: Generate an OpenSSL private key
   openssl_privatekey:
     path: "/etc/ssl/private/{{ organization.name }}.pem"
@@ -33,3 +39,27 @@
     ssl_key:  "/etc/ssl/certs/{{ organization.name }}.crt"
   when: ssl_key == "nocert"
 
+- name: Template nginx config file to /etc/nginx/nginx.conf
+  template:
+    src: templates/nginx.j2
+    dest: /etc/nginx/nginx.conf
+    force: yes
+
+- name: Template fastcgi_params file to etc/nginx/nginx.conf
+  template:
+    src: templates/fastcgi_params.j2
+    dest: /etc/nginx/fastcgi_params
+
+- name: Remove default file /etc/nginx/sites-enabled/default
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Template a file to etc/nginx/sites-enabled
+  template:
+    src: templates/suitecrm_site.j2
+    dest: /etc/nginx/sites-enabled/"{{ organization.hostname }}"
+
+- name: Start nginx
+  shell:
+    cmd: nginx

@@ -1,91 +1,51 @@
 ---
-- name: Install SuiteCRM server
-  hosts: localhost
+- hosts: localhost
   connection: local
   vars_files:
-    - vars/prod.yml
+    - vars/base.yml
+  become: yes
+  become_user: root
+  remote_user: root
   tasks:
-    - name: Install Suite CRM Dependencies
+    - name: Include nodeType variables
+      include_vars:
+        file: "vars/{{ BUILD_ENVIRONMENT }}.yml"
+      tags:
+        - always
+      ignore_errors: yes
+    - name: Include Special Variables
+      include_vars:
+        file: "vars/{{ lookup('env', 'COMPUTE_ENV') | default( 'base', True) }}.yml"
+      ignore_errors: yes
+    - name: Build And Install
       include_tasks:
-        file: jobs/build/install_dependencies.yml
+        file: jobs/build/build.yml
         apply:
           tags:
-          - nginx
-          - php
-          - build
+            - build
       tags:
-      - nginx
-      - php
-      - build
-
-    - name: Install SuiteCRM
-      include_tasks:
-        file: jobs/build/install_suitecrm.yml
-        apply:
-          tags:
-          - suitecrm
-          - build
-      tags:
-        - suitecrm
         - build
-
-    - name: Template php.ini file
+    - name: Run Configuration and Live
       include_tasks:
-        file: jobs/run/config_php.yml
+        file: jobs/run/run.yml
         apply:
           tags:
-          - php_config
-          - run
-      tags:
-      - php_config
-      - run
-
-    - name: Generate SSL certificate
-      include_tasks:
-        file: jobs/run/ssl_generate.yml
-        apply:
-          tags:
-          - sslcertificate
-          - run
-      tags:
-      - sslcertificate
-      - run
-
-    - name: Configure NGINX
-      include_tasks:
-        file: jobs/run/config_nginx.yml
-        apply:
-          tags:
-          - nginx
-          - run
-      tags:
-      - nginx
-      - run
-
-    - name: Run nginx
-      include_tasks:
-        file: jobs/run/nginx.yml
-        apply:
-          tags:
-            - nginx
             - run
       tags:
-        - nginx
         - run
-
+#    The database test needs to run before we run the commands to install suiteCRM to create the php.config file
     - name: Test database connectivity
       include_tasks:
         file: jobs/tests/database_test.yml
         apply:
           tags:
           - database
-          - test
           - run
+          - test
       tags:
       - database
-      - test
       - run
-
+      - test
     - name: Configure suiteCRM
       include_tasks:
         file: jobs/run/suitecrm_config.yml
@@ -96,38 +56,24 @@
       tags:
       - config_suiteCRM
       - run
-
-    - name: Test Nginx
+    - name: Run tests to make sure build and run applied application correctly
       include_tasks:
-        file: jobs/tests/nginx_test.yml
-        apply:
-          tags:
-          - nginx
-          - test
-          - run
+        file: jobs/tests/test.yml
       tags:
-      - nginx
-      - test
-      - run
-
-    - name: Test URL
-      include_tasks:
-        file: jobs/tests/url_test.yml
-        apply:
-          tags:
-            - url
-            - test
-            - run
-      tags:
-        - url
-        - test
         - run
-
-    - name: Execute NGINX
+        - test
+    - name: Execute application
       include_tasks:
-        file: jobs/exec/nginx.yml
+        file: jobs/exec/exec.yml
         apply:
           tags:
-          - exec
+            - exec
       tags:
-      - exec
+        - exec
+#    This section is not needed because we enable nginx damon
+#    - name: Run tests to make sure app is running as expected
+#      include_tasks:
+#        file: jobs/run/test.yml
+#      tags:
+#        - exec
+#        - test
