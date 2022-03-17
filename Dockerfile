@@ -17,6 +17,7 @@ ENV SSL_KEY="nokey"
 ENV SSL_CERTIFICATE="nocert"
 ENV ADMIN_NAME="admin"
 ENV ADMIN_PASS="p@ssword"
+ARG APP_LINK="https://suitecrm.com/files/147/SuiteCRM-8.0/613/SuiteCRM-8.0.4.zip"
 RUN ansible-playbook /opt/manager/upstart.yml -c local --tags build
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
