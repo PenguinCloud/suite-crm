@@ -25,4 +25,3 @@ cpu_count: "{{ lookup('env', 'CPU_COUNT') }}"
 
 file_limit: "{{ lookup('env', 'FILE_LIMIT') }}"
 
-app_link: "{{ lookup('env', 'APP_LINK') }}"
