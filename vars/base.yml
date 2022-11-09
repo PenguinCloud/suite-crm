@@ -1,5 +1,10 @@
 ---
+run:
+  user: ptg-user
 
+app:
+  title: "{{ lookup('ansible.builtin.env', 'APP_TILE') }}"
+  link: "{{ lookup('env', 'APP_LINK') }}"
 
 database:
   name: "{{ lookup('env', 'DATABASE_NAME') }}"
@@ -27,4 +32,3 @@ cpu_count: "{{ lookup('env', 'CPU_COUNT') }}"
 
 file_limit: "{{ lookup('env', 'FILE_LIMIT') }}"
 
-app_link: "{{ lookup('env', 'APP_LINK') }}"
