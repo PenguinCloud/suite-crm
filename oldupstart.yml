@@ -27,7 +27,7 @@
         - build
     - name: Run Configuration and Live
       include_tasks:
-        file: jobs/run/run.yml
+        file: jobs/run/old_runfile.yml
         apply:
           tags:
             - run

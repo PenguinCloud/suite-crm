@@ -12,7 +12,8 @@ RUN apt update && apt dist-upgrade -y && apt auto-remove -y && apt clean -y
 
 # PUT YER ARGS in here
 ARG APP_TITLE="SuiteCrm"
-ARG APP_LINK="suitecrm.zip https://suitecrm.com/files/147/SuiteCRM-7.12/614/SuiteCRM-7.12.5.zip"
+ARG APP_LINK="https://suitecrm.com/download/128/suite82/561615/suitecrm-8-2-0-zip.zip"
+ARG APP_VERSION="SuiteCRM-8.2.0"
 
 # BUILD IT!
 RUN ansible-playbook build.yml -c local

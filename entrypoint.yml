@@ -21,7 +21,7 @@
         file: jobs/tests/tests.yml
     - name: Run And Configure
       include_tasks:
-        file: jobs/run/run.yml
+        file: jobs/run/old_runfile.yml
     - name: Execute application
       include_tasks:
         file: jobs/run/exec.yml

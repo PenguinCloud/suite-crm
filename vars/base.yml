@@ -5,6 +5,7 @@ run:
 app:
   title: "{{ lookup('ansible.builtin.env', 'APP_TILE') }}"
   link: "{{ lookup('env', 'APP_LINK') }}"
+  version: "{{ lookup('env', 'APP_VERSION') }}"
 
 database:
   name: "{{ lookup('env', 'DATABASE_NAME') }}"

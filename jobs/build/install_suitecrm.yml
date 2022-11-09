@@ -4,8 +4,18 @@
     path: /opt/suitecrm
     state: directory
 
+- name: Download suite crm
+  get_url:
+    url: "{{ app.link }}"
+    dest: /opt/suitecrm
+
 - name: Download and extract SuiteCRM
   ansible.builtin.unarchive:
-    src: "{{ app_link }}"
+    src: "/opt/suitecrm/{{ app.version }}.zip"
     dest: /opt/suitecrm
     remote_src: yes
+
+- name: Delete the zip file
+  file:
+    src: "/opt/suitecrm/{{ app.version }}.zip"
+    state: absent
