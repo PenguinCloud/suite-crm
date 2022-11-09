@@ -13,13 +13,6 @@ services:
     networks:
       - suitecrm
 
-  php-fpm:
-    image: 'bitnami/php-fpm:latest'
-    ports:
-      - "9000:9000"
-    networks:
-      - suitecrm
-
   suitecrm-server:
     build: .
     environment:

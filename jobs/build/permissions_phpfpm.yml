@@ -1,0 +1,28 @@
+- name: Recursively change ownership of php-fpm
+  ansible.builtin.file:
+    path: /etc/php/8.0/fpm
+    state: directory
+    recurse: yes
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+
+- name: Create directory for php-fpm
+  ansible.builtin.file:
+    path: /run/php
+    state: directory
+
+- name: Recursively change ownership of /run/php
+  ansible.builtin.file:
+    path: /run/php
+    state: directory
+    recurse: yes
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+
+- name: Recursively change ownership of var/log
+  ansible.builtin.file:
+    path: /var/log
+    state: directory
+    recurse: yes
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"

@@ -1,35 +1,9 @@
----
 - name: Install Dependencies
-  apt:
-    pkg:
-    - nginx-core
-    - php-cli
-    - php-curl
-    - php-common
-    - php-intl
-    - php-json
-    - php-gd
-    - php-mbstring
-    - php-mysqli
-    - php-pdo-mysql
-    - openssl
-    - php-soap
-    - php-xml
-    - php-zip
-    - php-imap
-    - php-ldap
-    - python-openssl
-    - python3-pymysql
-    state: latest
-    update_cache: yes
+  include_tasks:
+    file: install_dependencies.yml
 
-- name: Create empty repo for suite crm
-  file:
-    path: /opt/suitecrm
-    state: directory
+- name: Install Suite Crm
+  include_tasks:
+    file: install_suitecrm.yml
 
-- name: Download and extract SuiteCRM
-  ansible.builtin.unarchive:
-    src: "{{ app_link }}"
-    dest: /opt/suitecrm
-    remote_src: yes
+

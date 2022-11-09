@@ -1,0 +1,26 @@
+---
+- name: Recursively change ownership of akaunting directory
+  ansible.builtin.file:
+    path: /opt/akaunting
+    state: directory
+    recurse: yes
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+
+- name: Recursively change ownership of /var/lib/nginx
+  ansible.builtin.file:
+    path: /var/lib/nginx
+    state: directory
+    recurse: yes
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+
+- name: Recursively change ownership for etc/nginx
+  ansible.builtin.file:
+    path: /etc/nginx
+    state: directory
+    recurse: yes
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+
+
