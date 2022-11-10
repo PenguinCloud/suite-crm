@@ -1,0 +1,12 @@
+---
+- name: Configure nginx .conf
+  template:
+    src: /opt/manager/templates/nginx.j2
+    dest: /etc/nginx/nginx.conf
+    force: yes
+
+- name: Configure nginx weberver
+  template:
+    src: /opt/manager/templates/akaunting_web.j2
+    dest: /etc/nginx/conf.d/akaunting.conf
+    force: yes

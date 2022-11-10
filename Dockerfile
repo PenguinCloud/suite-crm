@@ -39,7 +39,7 @@ ENV ADMIN_PASS="p@ssword"
 # Switch to non-root user
 USER ptg-user
 
-EXPOSE 8080
+EXPOSE 8080 8443
 
 # Entrypoint time (aka runtime)
 ENTRYPOINT ["/bin/bash","/opt/manager/entrypoint.sh"]

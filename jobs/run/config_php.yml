@@ -1,0 +1,12 @@
+---
+- name: Config php
+  template:
+    src: templates/php_config.j2
+    dest: /etc/php/7.4/cli/php.ini
+    force: yes
+
+- name: Template php-fpm www config file
+  template:
+    src: /opt/manager/templates/www_config.j2
+    dest: /etc/php/8.0/fpm/pool.d/www.conf
+    force: yes

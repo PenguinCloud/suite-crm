@@ -1,7 +1,7 @@
 ---
 - name: Recursively change ownership of akaunting directory
   ansible.builtin.file:
-    path: /opt/akaunting
+    path: /opt/suitecrm
     state: directory
     recurse: yes
     owner: "{{ run.user }}"

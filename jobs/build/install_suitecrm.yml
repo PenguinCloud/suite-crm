@@ -17,5 +17,5 @@
 
 - name: Delete the zip file
   file:
-    src: "/opt/suitecrm/{{ app.version }}.zip"
+    path: "/opt/suitecrm/{{ app.version }}.zip"
     state: absent

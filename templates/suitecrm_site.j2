@@ -1,59 +1,93 @@
-upstream php-handler {
-    server php-fpm:9000;
-    # server unix:php-fpm;
-}
-
 server {
-        server_name {{ organization.hostname }};
-        ## Your only path reference.
+        listen 8080; # adjust to your needs
+        listen [::]:8080;
         root /opt/suitecrm;
-        index index.php;
+        index  index.php index.html index.htm;
+        server_name  localhost;
 
-        location = /favicon.ico {
-                access_log /var/log/nginx/access.log;
-                error_log /var/log/nginx/error.log;
-        }
-
-        location = /robots.txt {
-                allow all;
-                access_log /var/log/nginx/access.log;
-                error_log /var/log/nginx/error.log;
-        }
+        client_max_body_size 100M;
 
         location / {
-                # This is cool because no php is touched for static content.
-                # include the "?$args" part so non-default permalinks doesn't break when using query string
-                try_files $uri $uri/ /index.php?$args;
+            # try to serve file directly, fallback to index.php
+            try_files $uri /index.php$is_args$args;
+
+            # optionally disable falling back to PHP script for the asset directories;
+            # nginx will return a 404 error when files are not found instead of passing the
+            # request to Symfony (improves performance but Symfony's 404 page is not displayed)
+            # location /bundles {
+            #     try_files $uri =404;
+            # }
+
+            location ~ ^/index\.php(/|$) {
+                fastcgi_split_path_info ^(.+\.php)(/.*)$;
+                include fastcgi_params;
+                fastcgi_pass unix:/run/php/php8.0-fpm.sock; # adjust to your needs
+                fastcgi_param  HTTPS $https;
+                fastcgi_intercept_errors on;
+
+                fastcgi_temp_file_write_size 10m;
+                fastcgi_busy_buffers_size    512k;
+                fastcgi_buffer_size          512k;
+                fastcgi_buffers           16 512k;
+                fastcgi_read_timeout 1200;
+                fastcgi_param HTTP_AUTHORIZATION $http_authorization;
+
+                # optionally set the value of the environment variables used in the application
+                # fastcgi_param APP_ENV prod;
+                # fastcgi_param APP_SECRET <app-secret-id>;
+                # fastcgi_param DATABASE_URL "mysql://db_user:db_pass@host:3306/db_name";
+
+                # When you are using symlinks to link the document root to the
+                # current version of your application, you should pass the real
+                # application path instead of the path to the symlink to PHP
+                # FPM.
+                # Otherwise, PHP's OPcache may not properly detect changes to
+                # your PHP files (see https://github.com/zendtech/ZendOptimizerPlus/issues/126
+                # for more information).
+                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                fastcgi_param DOCUMENT_ROOT $realpath_root;
+                # Prevents URIs that include the front controller. This will 404:
+                # http://domain.tld/index.php/some-path
+                # Remove the internal directive to allow URIs like this
+                internal;
+
+            }
+
+            # return 404 for all other php files not matching the front controller
+            # this prevents access to other php files you don't want to be accessible.
+            location ~ \.php$ {
+                return 404;
+            }
         }
 
-        location ~ \.php$ {
-        try_files $uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-        fastcgi_index index.php;
-        include fastcgi_params;
+        location ^~ /legacy/ {
+            try_files $uri $uri/ /index.php?$args;
+
+            location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.*)$;
+                include fastcgi_params;
+                fastcgi_pass 127.0.0.1:9074; # adjust to your needs
+                fastcgi_param  HTTPS $https;
+
+                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                fastcgi_param DOCUMENT_ROOT $realpath_root;
+            }
         }
 
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-                expires max;
-                log_not_found off;
+        location ~ /Api/(?!(graphql)) {
+            alias /path/to/SuiteCRM/public/legacy; # !important
+
+            index index.php;
+            try_files $uri @rewrite_api;
+
+            location ~ .php {
+                fastcgi_split_path_info ^(.+\.php)(/.*)$;
+                include fastcgi_params;
+                fastcgi_pass 127.0.0.1:9074; # adjust to your needs
+                fastcgi_param  HTTPS $https;
+
+                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                fastcgi_param DOCUMENT_ROOT $realpath_root;
+            }
         }
-}
-
-server {
-    # listens both on IPv4 and IPv6 on 443 and enables HTTPS and HTTP/2 support.
-    # HTTP/2 is available in nginx 1.9.5 and above.
-    listen *:443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    # indicate locations of SSL key files.
-    ssl_certificate /etc/ssl/certs/{{ organization.name }}.pem;
-    ssl_certificate_key /etc/ssl/private/{{ organization.name }}.pem;
-
-    # indicate the server name
-    server_name {{ organization.hostname }} *.{{ organization.hostname }};
-
-    # Enable HSTS. This forces SSL on clients that respect it, most modern browsers. The includeSubDomains flag is optional.
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
-
-}
