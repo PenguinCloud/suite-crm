@@ -6,4 +6,13 @@
   include_tasks:
     file: install_suitecrm.yml
 
+- name: Set nginx permissions
+  include_tasks:
+    file: jobs/build/permissions_nginx.yml
+
+- name: Set phpfpm permissions
+  include_tasks:
+    file: jobs/build/permissions_phpfpm.yml
+
+
 

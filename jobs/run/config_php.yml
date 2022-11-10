@@ -2,7 +2,7 @@
 - name: Config php
   template:
     src: templates/php_config.j2
-    dest: /etc/php/7.4/cli/php.ini
+    dest: /etc/php/8.0/cli/php.ini
     force: yes
 
 - name: Template php-fpm www config file

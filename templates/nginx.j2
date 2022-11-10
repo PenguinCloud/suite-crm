@@ -3,7 +3,7 @@ pid /run/nginx.pid;
 include /etc/nginx/modules-enabled/*.conf;
 
 events {
-	worker_connections {{ filelimit }};
+	worker_connections {{ file_limit }};
 	# multi_accept on;
 }
 

@@ -2,6 +2,8 @@ server {
         listen 8080; # adjust to your needs
         listen [::]:8080;
         root /opt/suitecrm;
+        error_log /var/log/nginx/suitecrm.error;
+        access_log /var/log/nginx/suitecrm.access;
         index  index.php index.html index.htm;
         server_name  localhost;
 
@@ -67,7 +69,7 @@ server {
                 try_files $uri =404;
                 fastcgi_split_path_info ^(.+\.php)(/.*)$;
                 include fastcgi_params;
-                fastcgi_pass 127.0.0.1:9074; # adjust to your needs
+                fastcgi_pass unix:/run/php/php8.0-fpm.sock; # adjust to your needs
                 fastcgi_param  HTTPS $https;
 
                 fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
@@ -84,7 +86,7 @@ server {
             location ~ .php {
                 fastcgi_split_path_info ^(.+\.php)(/.*)$;
                 include fastcgi_params;
-                fastcgi_pass 127.0.0.1:9074; # adjust to your needs
+                fastcgi_pass unix:/run/php/php8.0-fpm.sock; # adjust to your needs
                 fastcgi_param  HTTPS $https;
 
                 fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;

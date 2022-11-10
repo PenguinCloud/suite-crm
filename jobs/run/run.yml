@@ -3,6 +3,10 @@
   include_tasks:
     file: configure_nginx.yml
 
-- name: Start nginx
+- name: Confire php
   include_tasks:
-    file: exec.yml
+    file: config_php.yml
+
+#- name: Start nginx
+#  include_tasks:
+#    file: exec.yml

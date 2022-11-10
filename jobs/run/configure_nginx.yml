@@ -7,6 +7,6 @@
 
 - name: Configure nginx weberver
   template:
-    src: /opt/manager/templates/akaunting_web.j2
+    src: /opt/manager/templates/suitecrm_site.j2
     dest: /etc/nginx/conf.d/akaunting.conf
     force: yes
