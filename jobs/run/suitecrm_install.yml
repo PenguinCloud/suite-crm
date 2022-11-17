@@ -1,0 +1,5 @@
+---
+- name: Run install file crated earlier
+  shell:
+    chdir: /opt/suitecrm
+    cmd: bash install

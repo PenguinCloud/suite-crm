@@ -1,0 +1,6 @@
+---
+- name: Url test
+  uri:
+    url: "{{ app_url }}"
+    status_code: [200, 202]
+    validate_certs: no

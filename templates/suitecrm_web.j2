@@ -1,0 +1,63 @@
+server {
+    listen 8080;
+    listen [::]:8080;
+    server_name localhost;
+    root /opt/suitecrm;
+
+    error_log /var/log/nginx/suitecrm.error.log;
+    access_log /var/log/nginx/suitecrm.access.log;
+    client_max_body_size 20M;
+
+    index index.php index.html index.htm;
+
+
+    location / {
+        # try to serve file directly, fallback to app.php
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        # try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        # NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+
+        fastcgi_pass unix:/run/php/php8.0-fpm.sock;
+        #Note: If you install SuiteCRM on iRedMail server, you should use the TCP socket instead.
+        #fastcgi_pass 127.0.0.1:9999
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 256 16k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_temp_file_write_size 256k;
+    }
+
+    # Don't log favicon
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    # Don't log robots
+    location = /robots.txt  {
+        access_log off;
+        log_not_found off;
+    }
+
+    # Deny all attempts to access hidden files/folders such as .htaccess, .htpasswd, .DS_Store (Mac), etc...
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # A long browser cache lifetime can speed up repeat visits to your page
+    location ~* \.(jpg|jpeg|gif|png|webp|svg|woff|woff2|ttf|css|js|ico|xml)$ {
+        access_log        off;
+        log_not_found     off;
+        expires           360d;
+    }
+}
+

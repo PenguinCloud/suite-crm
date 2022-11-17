@@ -27,7 +27,7 @@ admin:
 ssl_key: "{{ lookup('env', 'SSL_KEY') }}"
 ssl_cert: "{{ lookup('env', 'SSL_CERTIFICATE') }}"
 
-url: "{{ lookup('env', 'URL') }}"
+app_url: "{{ lookup('env', 'APP_URL') }}"
 
 cpu_count: "{{ lookup('env', 'CPU_COUNT') }}"
 

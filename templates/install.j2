@@ -1,0 +1,4 @@
+#!/bin/bash
+cd
+cd /opt/suitecrm
+./bin/console suitecrm:app:install -u "{{ admin.name }}" -p "{{ admin.password }}" -U "{{ database.user }}" -P "{{ database.password }}" -H "{{ database.host }}" -N "{{ database.name }}" -S "{{ app_url }}" -Z "{{ database.port }}" -d "no"

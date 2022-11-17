@@ -1,17 +1,26 @@
 ---
-- name: Run command to install Suite CRM
-  command: >
-    ./bin/console suitecrm:app:install
-    -u "{{ admin.name }}"
-    -p "{{ admin.password }}"
-    -U "{{ database.user }}"
-    -P "{{ database.password }}"
-    -H "{{ database.host }}"
-    -N "{{ database.name }}"
-    -S "{{ url }}"
-    -Z "{{ database.port }}"
-    -d "yes"
-  args:
-    chdir: /opt/suitecrm
-  register: cmd_result
-  failed_when: (cmd_result.rc != 0 ) and (cmd_result.rc != 255 )
+- name: Create and template bash file to install suite crm
+  template:
+    src: templates/install.j2
+    dest: /opt/suitecrm/install
+    owner: "{{ run.user}}"
+    group: "{{ run.user}}"
+    mode: '0755'
+
+#- name: Run command to install Suite CRM
+#  shell:
+#    chdir: /opt/suitecrm
+#    cmd: "./bin/console suitecrm:app:install
+#        -u {{ admin.name }}
+#        -p {{ admin.password }}
+#        -U {{ database.user }}
+#        -P {{ database.password }}
+#        -H {{ database.host }}
+#        -N {{ database.name }}
+#        -S {{ app_url }}
+#        -Z {{ database.port }}
+#        -d yes"
+#  register: cmd_result
+#  failed_when: (cmd_result.rc != 1 ) and (cmd_result.rc != 255 )
+#
+#

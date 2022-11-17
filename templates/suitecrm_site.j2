@@ -1,13 +1,12 @@
 server {
         listen 8080; # adjust to your needs
         listen [::]:8080;
-        root /opt/suitecrm;
-        error_log /var/log/nginx/suitecrm.error;
-        access_log /var/log/nginx/suitecrm.access;
+        root /opt/suitecrm/public;
         index  index.php index.html index.htm;
         server_name  localhost;
-
-        client_max_body_size 100M;
+        error_log /var/log/nginx/suitecrm.error.log;
+    access_log /var/log/nginx/suitecrm.access.log;
+        client_max_body_size 200M;
 
         location / {
             # try to serve file directly, fallback to index.php
@@ -93,4 +92,9 @@ server {
                 fastcgi_param DOCUMENT_ROOT $realpath_root;
             }
         }
+
+        location @rewrite_api {
+            rewrite ^/Api/(.*)?$ /Api/index.php/$1 last;
+        }
+
     }

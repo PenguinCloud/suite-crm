@@ -22,19 +22,19 @@ RUN ansible-playbook build.yml -c local
 ENV DATABASE_NAME="suitecrm"
 ENV DATABASE_USER="suitecrm"
 ENV DATABASE_PASSWORD="p@ssword"
-ENV DATABASE_HOST="localhost"
+ENV DATABASE_HOST="mariadb"
 ENV DATABASE_PORT="3306"
 ENV ORGANIZATION_NAME="name"
 ENV ORGANIZATION_COUNTRY="US"
 ENV ORGANIZATION_EMAIL="admin@localhost"
 ENV ORGANISATION_HOSTNAME="ptg.org"
-ENV URL="https://127.0.0.1"
+ENV APP_URL="http://localhost:8080"
 ENV CPU_COUNT="2"
 ENV FILE_LIMIT="1042"
 ENV SSL_KEY="nokey"
 ENV SSL_CERTIFICATE="nocert"
 ENV ADMIN_NAME="admin"
-ENV ADMIN_PASS="p@ssword"
+ENV ADMIN_PASS="pass"
 
 # Switch to non-root user
 USER ptg-user

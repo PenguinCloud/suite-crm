@@ -7,6 +7,19 @@
   include_tasks:
     file: config_php.yml
 
-#- name: Start nginx
-#  include_tasks:
-#    file: exec.yml
+- name: Start nginx
+  include_tasks:
+    file: start_nginx.yml
+
+- name: Template a install file
+  include_tasks:
+    file: suitecrm_config.yml
+
+# Added this test because before you can configure suitecrm you have to access the browser
+- name: I need to access the url before I can run the config
+  include_tasks:
+    file: jobs/tests/test_uri.yml
+
+- name: Install suitecrm
+  include_tasks:
+    file: suitecrm_install.yml
