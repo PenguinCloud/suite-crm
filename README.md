@@ -1,8 +1,9 @@
-# Akaunting
+# SuiteCRM
 
->>Akaunting is a free, open source online accounting software designed for small businesses and freelancers. 
-> It is built with modern technologies such as Laravel, VueJS, Tailwind, RESTful API etc.
-> 
+>> SuiteCRM is an open source Customer Relationship Management (CRM) software solution that provides a 360-degree view of your customers and business.
+> Making it easy for your Sales, Marketing and Customer Service departments to discover key information that will help you grow, retain and delight your customers.
+ 
+ 
 # Why this image vs others
 ## Built in self testing and healing
 All PTG builds have unit and dynamic tests as part of the build of their images, as well as during runtime to ensure the system keeps running as expected. If the system falls out of bounds of the test, the images have some self healing capabilities fix common minor problems.
